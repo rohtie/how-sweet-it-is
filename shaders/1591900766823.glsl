@@ -20,6 +20,9 @@ float map(vec3 p) {
     p.xz *= rotate(time * .06);
 
 
+    p.y += sin(p.x * 0.1 + time * 10. + cos(p.x * 0.5 + time) * .75) * .4;
+    p.y += sin(p.z * 0.2 + time * 5.) * .7;
+
 
     float r = 1000.;
 
@@ -108,25 +111,46 @@ float map(vec3 p) {
         r = smin(r, length(p) - 3.65, 4.);
     }
 
-    // Thighs
-    // {
-    //     vec3 p = p;
+    // Thigs + legs + feet
+    {
+        vec3 p = p;
 
-    //     p.x = abs(p.x);
+        p.x = abs(p.x);
 
-    //     p.z += 5.;
-    //     p.y += 6.65;
-    //     p.x -= 3.75;
+        p.z += 0.5;
+        p.y += 11.65;
+        p.x -= 4.15;
 
-    //     p.zy *= rotate(-.32);
-    //     p.zx *= rotate(-.51);
+        p.yx *= rotate(-0.47);
+        p.zy *= rotate(0.42);
 
-    //     float part = length(max(abs(p) - vec3(0., 0., 4.25), 0.)) - 2.5 - p.z * .1;
+        float part = length(max(abs(p) - vec3(0., 8.25, 0.), 0.)) - 4.;
+        r = smin(r, part, 1.8);
 
-    //     r = smin(r, part, 4.);
-    // }
+        p.y += 27.;
+        p.z += 5.5;
+        p.x += 2.;
 
-    return r * 5.;
+
+        p.yx *= rotate(-0.48);
+        p.zy *= rotate(0.40);
+
+        part = length(max(abs(p) - vec3(0., 17.25, 0.), 0.)) - 4.;
+        r = smin(r, part, 1.8);   
+
+
+        // p.yx *= rotate(-0.48);
+        // p.zy *= rotate(0.40);
+
+        // p.y += 20.;
+
+        // part = length(max(abs(p) - vec3(0., 0., 10.), 0.)) - 4.;
+        // r = smin(r, part, 1.8);   
+
+
+    }
+
+    return r * 8.;
 }
 
 vec4 pixel(vec2 p) {
@@ -134,7 +158,7 @@ vec4 pixel(vec2 p) {
     p = 2.0 * p - 1.0;
     p.x *= resolution.x / resolution.y;
 
-    vec3 cam = vec3(0., 0., 27.);
+    vec3 cam = vec3(0., -5., 27.);
     vec3 ray = vec3(p, -1.);
 
     float dist = 0;
@@ -144,15 +168,16 @@ vec4 pixel(vec2 p) {
         float tmp = map(p);
 
         if (tmp < 0.001) {
-            vec3 light = normalize(vec3(12., -5., -10.));
-
-            float shade = map(p - light * 1.5);
-            return vec4(1., 1., 1., 0.) * shade;
+            float greenShade = map(p - normalize(vec3(12., -5., -10.)) * 1.5);
+            float redShade = map(p - normalize(vec3(-12., 5., -4.)) * 1.5);
+            float blueShade = map(p - normalize(vec3(20., -15., 10.)) * 1.5);
+            
+            return vec4(redShade, greenShade * 1.3, blueShade * 2.5, 0.) * tan(time * 24.);
         }
 
         dist += tmp;
 
-        if (dist > 50.) {
+        if (dist > 90.) {
             break;
         }
     }
