@@ -3,12 +3,17 @@
     ],
     "scenes": [
         {
+            "length": 49500,
+            "name": "rohtie",
+            "shader": 2
+        },
+        {
             "length": 39213,
             "name": "Intro",
             "shader": 0
         },
         {
-            "length": 103287,
+            "length": 73787,
             "name": "ASS",
             "shader": 1
         }
@@ -53,6 +58,26 @@
                 }
             ],
             "id": "1591900766823"
+        },
+        {
+            "channels": [
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                }
+            ],
+            "id": "1592600659572"
         }
     ]
 }
