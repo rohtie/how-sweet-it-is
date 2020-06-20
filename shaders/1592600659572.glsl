@@ -95,16 +95,39 @@ float i(vec2 p) {
     return r;
 }
 
+float e(vec2 p) {
+    float r = 420.;
+
+    {
+        vec2 p = p;
+        // p.y += 0.187;
+        // p.x += 0.166 - 0.075 * 2.;
+        // r = min(r, max((p * rotate(-0.25)).y - 0.05, box(p, vec2(0.075, 0.15))));
+
+        // p.y -= 0.35;
+        p.y -= 0.013;
+        p.x -= 0.15;
+        r = min(r, max((p * rotate(0.25)).y, box(p, vec2(0.075, 0.075))));
+
+        p.y += 0.112 + 0.075;
+        r = min(r, box(p, vec2(0.075, 0.075 * .5)));
+    }
+
+    return r;
+}
+
 float rohtie(vec2 p) {
     float re = 420.;
 
-    p.x += 0.05;
+    // p.x += 0.05;
+    p.x -= 0.035;
 
     re = min(re, r(p - vec2(-0.75, 0.)));
     // re = min(re, o(p - vec2(-0.248, -0.04)));
     re = min(re, h(p - vec2(-0.055, -0.001)));
     // re = min(re, t(p - vec2(0.545, 0.)));
     re = min(re, i(p - vec2(0.38, 0.)));
+    re = min(re, e(p - vec2(0.5145, 0.)));
 
     return re;
 }
