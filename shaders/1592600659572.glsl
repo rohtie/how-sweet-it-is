@@ -119,6 +119,11 @@ float e(vec2 p) {
 float rohtie(vec2 p) {
     float re = 420.;
 
+    p.y += sin(p.x + tan(p.y * 5. + time) + time * 2.) * .01;
+    p.x += tan(p.x * 2. * sin(p.y * 200. + time) + sin(p.x * 20. + time + tan(p.y * 20. + time))) * .0002;    
+
+    p.y += tan(abs(p.x - tan(p.y * 1.5)) * 4. + time + sin(p.y * 0.55) * 5.5 + cos(p.y * 2.) * 0.29) * .002;
+
     // p.x += 0.05;
     p.x -= 0.035;
 
@@ -132,17 +137,27 @@ float rohtie(vec2 p) {
     return re;
 }
 
-
 vec4 pixel(vec2 p) {
     p /= resolution;
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
-    // p.y += sin(p.x + tan(p.y * 5. + time) + time * 2.) * .01;
-    // p.x += tan(p.x * 2. * sin(p.y * 200. + time) + sin(p.x * 20. + time + tan(p.y * 20. + time))) * .0002;
     float re = rohtie(p);
-    // re = smoothstep(0., 0.0 + abs((p.x + sin(time * .15) * 1.1) * .05) * 2.5, re);
-    re = step(re, 0.0);
 
-    return vec4(1., 0.0, 0.0, 0.) * re;
+    vec3 e = vec3(1., -1.,0.) * 0.002;
+
+    float x1 = step(rohtie(p + e.xz), 0.);
+    float y1 = step(rohtie(p + e.zy), 0.);
+    float y2 = step(rohtie(p - e.zy), 0.);
+    float x2 = step(rohtie(p - e.xz), 0.);
+
+    vec2 normal = normalize(vec2(x1 - x2, y1 - y2)) * 10.;
+
+    vec2 light = normalize(vec2(sin(time), cos(time)));
+    float diffuse = dot(normal, light);
+
+    float mre = step(re, 0.0);
+    re = smoothstep(0., 0.0 + abs((p.x + sin(time * .15) * 1.1) * .05) * 2.5, re);
+
+    return vec4(1., 0.0, 0.0, 0.) * mre + vec4(diffuse) * (1. - mre);
 }
