@@ -1,5 +1,3 @@
-
-
 float box(vec2 p, vec2 b) {
     return length(max(abs(p) - b, 0.)) - 0.0;
 }
@@ -11,7 +9,7 @@ mat2 rotate(float a) {
 }
 
 float r(vec2 p) {
-    float r = 420.;
+    float r = 1.;
 
     {
         vec2 p = p;
@@ -33,7 +31,7 @@ float r(vec2 p) {
 }
 
 float o(vec2 p) {
-    float r = 420.;
+    float r = 1.;
 
     p *= rotate(0.25);
     r = min(r, box(p, vec2(0.125, 0.125)));
@@ -42,7 +40,7 @@ float o(vec2 p) {
 }
 
 float h(vec2 p) {
-    float r = 420.;
+    float r = 1.;
 
     {
         vec2 p = p;
@@ -71,7 +69,7 @@ float h(vec2 p) {
     {
         vec2 p = p;
         p.x += 0.099;
-        p.y += 0.072;
+        p.y += 0.071;
         p *= rotate(-0.25);
         r = min(r, box(p, vec2(0.125, 0.075)));
     }    
@@ -80,7 +78,7 @@ float h(vec2 p) {
 }
 
 float i(vec2 p) {
-    float r = 420.;
+    float r = 1.;
 
     {
         vec2 p = p;
@@ -96,15 +94,11 @@ float i(vec2 p) {
 }
 
 float e(vec2 p) {
-    float r = 420.;
+    float r = 1.;
 
     {
         vec2 p = p;
-        // p.y += 0.187;
-        // p.x += 0.166 - 0.075 * 2.;
-        // r = min(r, max((p * rotate(-0.25)).y - 0.05, box(p, vec2(0.075, 0.15))));
 
-        // p.y -= 0.35;
         p.y -= 0.013;
         p.x -= 0.15;
         r = min(r, max((p * rotate(0.25)).y, box(p, vec2(0.075, 0.075))));
@@ -117,7 +111,7 @@ float e(vec2 p) {
 }
 
 float rohtie(vec2 p) {
-    float re = 420.;
+    float re = 1.;
 
     p *= 1.5;
 
@@ -126,16 +120,14 @@ float rohtie(vec2 p) {
 
     p.y += tan(abs(p.x - tan(p.y * 1.5)) * 4. + time + sin(p.y * 0.55) * 5.5 + cos(p.y * 2.) * 0.29) * .002;
 
-
-    // p.x += 0.05;
     p.x -= 0.035;
 
     re = min(re, r(p - vec2(-0.75, 0.)));
-    // re = min(re, o(p - vec2(-0.248, -0.04)));
     re = min(re, h(p - vec2(-0.055, -0.001)));
-    // re = min(re, t(p - vec2(0.545, 0.)));
     re = min(re, i(p - vec2(0.38, 0.)));
     re = min(re, e(p - vec2(0.5145, 0.)));
+
+    // re -= mod(-time * 2.5, 1.);
 
     return re;
 }
@@ -160,8 +152,11 @@ vec4 pixel(vec2 p) {
     float diffuse = dot(normal, light);
     diffuse = smoothstep(0., 1., diffuse);
 
+    float shad = rohtie(p - light * .5 * abs(p.x * 0.9));
+    shad = (2. + abs(p.x)) * .35 + smoothstep(0., 0.05 + abs(p.x * 2.) * 0.4, shad);
+
     float mre = step(re, 0.0);
     re = smoothstep(0., 0.0 + abs((p.x + sin(time * .15) * 1.1) * .05) * 2.5, re);
 
-    return vec4(1, 0., 0., 0.) * (1. - diffuse) + mre * (1. - diffuse);
+    return vec4(1.0, 0., 0., 0.) * (1. - diffuse) * shad + mre * (1. - diffuse);
 }
