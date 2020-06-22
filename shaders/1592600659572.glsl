@@ -127,8 +127,6 @@ float rohtie(vec2 p) {
     re = min(re, i(p - vec2(0.38, 0.)));
     re = min(re, e(p - vec2(0.5145, 0.)));
 
-    // re -= mod(-time * 2.5, 1.);
-
     return re;
 }
 

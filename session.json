@@ -3,9 +3,14 @@
     ],
     "scenes": [
         {
-            "length": 49500,
+            "length": 54000,
             "name": "rohtie",
             "shader": 2
+        },
+        {
+            "length": 42500,
+            "name": "WAves",
+            "shader": 3
         },
         {
             "length": 39213,
@@ -13,7 +18,7 @@
             "shader": 0
         },
         {
-            "length": 73787,
+            "length": 46787,
             "name": "ASS",
             "shader": 1
         }
@@ -78,6 +83,27 @@
                 }
             ],
             "id": "1592600659572"
+        },
+        {
+            "channels": [
+                {
+                    "type": 0
+                },
+                {
+                    "shader": 1,
+                    "type": 2
+                },
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                }
+            ],
+            "id": "1592847874482"
         }
     ]
 }
