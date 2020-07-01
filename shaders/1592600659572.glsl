@@ -135,6 +135,13 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
+    // p.x *= 200.;
+    float trans = max(1., 200. - time * 60.);
+    float trans2 = max(0., 50. - time * 7.);
+
+    p.x /= trans;
+
+
     float re = rohtie(p);
 
     vec3 e = vec3(1., -1.,0.) * 0.002;
@@ -156,5 +163,12 @@ vec4 pixel(vec2 p) {
     float mre = step(re, 0.0);
     re = smoothstep(0., 0.0 + abs((p.x + sin(time * .15) * 1.1) * .05) * 2.5, re);
 
-    return vec4(1.0, 0., 0., 0.) * (1. - diffuse) * shad + mre * (1. - diffuse);
+
+
+    vec4 bg = vec4(1.0, 0., 0., 0.);
+
+    bg += vec4(p.y * trans2);
+
+
+    return bg * (1. - diffuse) * shad + mre * (1. - diffuse);
 }
