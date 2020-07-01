@@ -135,7 +135,6 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
-    // p.x *= 200.;
     float trans = max(1., 200. - time * 60.);
     float trans2 = max(0., 50. - time * 7.);
 
@@ -166,7 +165,6 @@ vec4 pixel(vec2 p) {
 
 
     vec4 bg = vec4(1.0, 0., 0., 0.);
-
     bg += vec4(p.y * trans2);
 
 

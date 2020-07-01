@@ -3,12 +3,17 @@
     ],
     "scenes": [
         {
-            "length": 54000,
+            "length": 13000,
             "name": "rohtie",
             "shader": 2
         },
         {
-            "length": 42500,
+            "length": 26500,
+            "name": "Charge up",
+            "shader": 0
+        },
+        {
+            "length": 87500,
             "name": "WAves",
             "shader": 3
         },
