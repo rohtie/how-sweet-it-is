@@ -8,12 +8,17 @@
             "shader": 2
         },
         {
-            "length": 26500,
+            "length": 7335,
             "name": "Charge up",
             "shader": 4
         },
         {
-            "length": 87500,
+            "length": 7580,
+            "name": "To wave transition",
+            "shader": 5
+        },
+        {
+            "length": 119085,
             "name": "WAves",
             "shader": 3
         },
@@ -120,7 +125,8 @@
                     "type": 2
                 },
                 {
-                    "type": 0
+                    "shader": 4,
+                    "type": 2
                 },
                 {
                     "type": 0
@@ -130,6 +136,28 @@
                 }
             ],
             "id": "1593698869177"
+        },
+        {
+            "channels": [
+                {
+                    "type": 0
+                },
+                {
+                    "shader": 4,
+                    "type": 2
+                },
+                {
+                    "shader": 3,
+                    "type": 2
+                },
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                }
+            ],
+            "id": "1593701124975"
         }
     ]
 }
