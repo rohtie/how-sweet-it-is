@@ -10,8 +10,8 @@ vec4 pixel(vec2 p) {
 
     p.y += texture(channel1, q).r * 0.6;
 
-    if (abs(p.y) < (1. - (time - 12.7) * 0.25) * 1.65) {
-        return texture(channel1, q);
+    if (abs(p.y) < (1. - (time - 12.7) * 0.18) * 1.65) {
+        return texture(channel1, q) * tan(time * 37.);
     }
 
     q.x -= 0.001;
