@@ -135,11 +135,11 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
-    float trans = max(1., 200. - time * 60.);
+    float trans = max(1., 150. - time * 60.);
     float trans2 = max(0., 50. - time * 7.);
 
     p.x /= trans;
-
+    p.y /= 0.9  + trans * 0.1;
 
     float re = rohtie(p);
 
@@ -165,7 +165,7 @@ vec4 pixel(vec2 p) {
 
 
     vec4 bg = vec4(1.0, 0., 0., 0.);
-    bg += vec4(p.y * trans2);
+    bg += vec4(p.y * trans2, p.y * trans2 * 0.278, p.y * trans2 * 0.1, 0.);
 
 
     return bg * (1. - diffuse) * shad + mre * (1. - diffuse);
