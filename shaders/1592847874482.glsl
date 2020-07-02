@@ -58,14 +58,14 @@ vec4 pixel(vec2 p) {
     // vec3 cam = vec3(0., mod(time * 5., 6.), 2.);
     vec3 ray = vec3(p, -1.);
 
-    if (texture(channel1, q).g != 0.4) {
-        return vec4(
-            texture(channel1, q).r,
-            texture(channel1, q - 0.0005).g,
-            texture(channel1, q + 0.0005).b,
-            0.
-        );
-    }
+    // if (texture(channel1, q).g != 0.4) {
+    //     return vec4(
+    //         texture(channel1, q).r,
+    //         texture(channel1, q - 0.0005).g,
+    //         texture(channel1, q + 0.0005).b,
+    //         0.
+    //     );
+    // }
     
     float dist = 0.;
     for (int i=0; i<150; i++) {
