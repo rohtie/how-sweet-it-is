@@ -161,6 +161,16 @@ vec4 pixel(vec2 p) {
     vec3 cam = vec3(0., -5., 27.);
     vec3 ray = vec3(p, -1.);
 
+    float drum = tan(0.85 + time * 3.6);
+    drum = smoothstep(0.0, 1.0, drum);
+    drum *= .15;
+
+    vec4 bg = vec4(1. - p.y * .15, .4, 1. + length(p) * .08, 0.) * drum;        
+
+    if (drum < 0.15) {
+        return bg;
+    }
+
     float dist = 0;
     for (int i=0; i<250; i++) {
         vec3 p = cam + ray * dist;
@@ -172,7 +182,7 @@ vec4 pixel(vec2 p) {
             float redShade = map(p - normalize(vec3(-12., 5., -4.)) * 1.5);
             float blueShade = map(p - normalize(vec3(20., -15., 10.)) * 1.5);
             
-            return vec4(redShade, greenShade * 1.3, blueShade * 2.5, 0.) * tan(time * 24.);
+            return (vec4(redShade, greenShade * 1.3, blueShade * 2.5, 0.) * tan(time * 24.));
         }
 
         dist += tmp;
@@ -182,5 +192,5 @@ vec4 pixel(vec2 p) {
         }
     }
 
-    return vec4(tan(0.85 + time * 3.6));
+    return bg;
 }
