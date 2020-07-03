@@ -18,19 +18,24 @@
             "shader": 5
         },
         {
-            "length": 109086,
+            "length": 35586,
             "name": "Ass party",
             "shader": 1
         },
         {
-            "length": 39213,
+            "length": 53713,
             "name": "Intro",
             "shader": 0
         },
         {
-            "length": 46787,
+            "length": 26117,
             "name": "ASS",
             "shader": 1
+        },
+        {
+            "length": 30002,
+            "name": "Ending",
+            "shader": 0
         }
     ],
     "shaders": [

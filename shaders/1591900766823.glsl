@@ -182,5 +182,5 @@ vec4 pixel(vec2 p) {
         }
     }
 
-    return vec4(0.4);
+    return vec4(tan(0.85 + time * 3.6));
 }
