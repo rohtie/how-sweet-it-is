@@ -17,6 +17,33 @@ float hashie(vec2 p) {
 }
 
 
+float water(vec3 p) {
+    float r = 1.;
+
+    float cylinder = length(max(abs(p) - vec3(0., 20., 0.), 0.)) - 1.01 - sin(p.y * 4.6 + time * 18.) * .005;
+    cylinder = max(-cylinder, cylinder - 0.01);
+
+    float mask = 1.;
+    
+    p.xz *= rotate(0.25);
+    mask = min(mask, abs(p.x) - .175);
+    
+    p.xz *= rotate(0.2);
+    mask = min(mask, abs(p.x) - .08);
+
+    p.xz *= rotate(0.8);
+    mask = min(mask, abs(p.x) - .28);    
+
+    cylinder = max(cylinder, mask);
+
+    r = min(r, max(cylinder, abs(p.y + 0.6) - .6));
+    r = min(r, max(abs(p.y) - 0.01, length(p) - 1.04));
+    p.y += 1.;
+    r = smin(r, max(abs(p.y) - 0.01, length(p) - 5.), 20.);    
+
+    return r;
+}
+
 float fountain(vec3 p) {
     p.y *= 2.;
 
@@ -35,7 +62,7 @@ float fountain(vec3 p) {
 
 
 float map(vec3 p) {
-    return fountain(p);
+    return min(water(p), fountain(p));
 }
 
 vec4 pixel(vec2 p) {
@@ -47,10 +74,10 @@ vec4 pixel(vec2 p) {
     vec3 cam = vec3(0., 0., 4.);
     vec3 ray = vec3(p, -1.);
 
-    // cam.zx *= rotate(time * .204 + 1.75);
-    // ray.zx *= rotate(time * .204 + 1.75);
-    // cam.zy *= rotate(0.3);    
-    // ray.zy *= rotate(0.3);    
+    cam.zx *= rotate(time * .04 + 1.05);
+    ray.zx *= rotate(time * .04 + 1.05);
+    cam.xy *= rotate(0.4);    
+    ray.xy *= rotate(0.4);    
 
     float dist = 0.;
 
@@ -64,14 +91,15 @@ vec4 pixel(vec2 p) {
 
             float shade = map(p - light);
 
+            if (water(p) == tmp) {
+                // q.x += 0.002;
+                // q.y += 0.002;
+                // return texture(channel0, q);
+                // return 0.03 + texture(channel0, q) * vec4(1., 1.4, 1.2, 1.);                
+                return vec4(0., 0.14, 1.5, 0.) + shade * 1.75;
+            }
+
             if (fountain(p) == tmp) {
-
-                if (p.y > 0.0) {
-                    q.x += 0.002;
-                    q.y += 0.002;
-                    return 0.03 + texture(channel0, q) * vec4(1., 1.4, 1.2, 1.);
-                }
-
                 float ring = 1. - smoothstep(0., 0.001, abs(p.y + 0.52) - 0.04);
                 return vec4(shade * 2.) * vec4(p.y * .35 + 1.35 + ring * 1.25 + mod(p.y, 0.075) * 5., 0.9 + ring * 1.2 - mod(p.y + 0.31 + sin(p.x * 14. + time * 6.5) * .005, 0.075) * 5., 2.2 - ring, 0.);
             }
