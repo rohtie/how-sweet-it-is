@@ -12,6 +12,13 @@ float smin(float a, float b, float k) {
     return -log2(ka + kb) / k;
 }
 
+float smax(float a, float b, float k) {
+    float ka = exp2(k * a);
+    float kb = exp2(k * b);
+
+    return log2(ka + kb) / k;
+}
+
 float hashie(vec2 p) {
     return sin(p.x * 05. + sin(p.y * 200.) * 100. + p.x * p.y * 1000.);
 }
@@ -116,7 +123,7 @@ float water(vec3 p) {
     p.y += 1. + waves * 0.05;
     r = smin(r, max(abs(p.y) - 0.05, length(p) - 5.), 20.);    
 
-    r = max(r, -waterMask);
+    r = smax(r, -waterMask, 20.);
 
     return r;
 }
@@ -175,7 +182,6 @@ vec4 pixel(vec2 p) {
         if (tmp < 0.001) {
             vec3 light = normalize(p - vec3(4., -0.5, 5.));
 
-            vec3 normal = getNormal(p);
 
             float shade = map(p - light);
 
@@ -185,9 +191,11 @@ vec4 pixel(vec2 p) {
                 // return texture(channel0, q);
                 // return 0.03 + texture(channel0, q) * vec4(1., 1.4, 1.2, 1.);                
 
+                vec3 normal = getNormal(p);
                 normal = reflect(ray, normal);
-                return reflectionmap(normal) * shade * 4. * vec4(.6, 2.9, 1.6, 0.) + 0.2;
-                return vec4(0., 0.14, 1.5, 0.) + shade * 1.75;
+
+                return reflectionmap(normal) * shade * 4. * vec4(.6 - length(p.xz) * .5, 2.9, 1.6 - length(p.xz) * .2, 0.) + 0.2;
+                // return vec4(0., 0.14, 1.5, 0.) + shade * 1.75;
             }
 
             if (fountain(p) == tmp) {
