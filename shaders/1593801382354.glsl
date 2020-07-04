@@ -12,11 +12,15 @@ float smin(float a, float b, float k) {
     return -log2(ka + kb) / k;
 }
 
+float hashie(vec2 p) {
+    return sin(p.x * 05. + sin(p.y * 200.) * 100. + p.x * p.y * 1000.);
+}
+
 
 float fountain(vec3 p) {
     p.y *= 2.;
 
-    float r = max(p.y, length(p) - 1.);
+    float r = max(p.y, length(p) - 1. - sin(p.y * 20. + time * 5.) * .005);
     p.y += 0.05;
     r = min(r, max(-p.y - 1.05, length(p - vec3(0., -1., 0.)) - .2));
 
@@ -43,10 +47,10 @@ vec4 pixel(vec2 p) {
     vec3 cam = vec3(0., 0., 4.);
     vec3 ray = vec3(p, -1.);
 
-    cam.zx *= rotate(time * .04 + 1.75);
-    ray.zx *= rotate(time * .04 + 1.75);
-    cam.zy *= rotate(0.3);    
-    ray.zy *= rotate(0.3);    
+    // cam.zx *= rotate(time * .204 + 1.75);
+    // ray.zx *= rotate(time * .204 + 1.75);
+    // cam.zy *= rotate(0.3);    
+    // ray.zy *= rotate(0.3);    
 
     float dist = 0.;
 
@@ -69,7 +73,7 @@ vec4 pixel(vec2 p) {
                 }
 
                 float ring = 1. - smoothstep(0., 0.001, abs(p.y + 0.52) - 0.04);
-                return vec4(shade * 2.) * vec4(p.y * .35 + 1.35 + ring * 1.25, 0.9 + ring * 1.2, 2.2 - ring, 0.);
+                return vec4(shade * 2.) * vec4(p.y * .35 + 1.35 + ring * 1.25 + mod(p.y, 0.075) * 5., 0.9 + ring * 1.2 - mod(p.y + 0.31 + sin(p.x * 14. + time * 6.5) * .005, 0.075) * 5., 2.2 - ring, 0.);
             }
 
             return vec4(shade);
