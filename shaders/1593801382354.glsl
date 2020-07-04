@@ -16,12 +16,80 @@ float hashie(vec2 p) {
     return sin(p.x * 05. + sin(p.y * 200.) * 100. + p.x * p.y * 1000.);
 }
 
+vec4 side(vec2 p) {
+    return vec4(smoothstep(0., 0.05, mod(p.x, 0.1) - .04));
+}
+
+vec4 top(vec2 p) {
+    return vec4(smoothstep(0., 0.05, mod(p.x, 0.1) - .04));
+}
+
+vec4 bottom(vec2 p) {
+    return vec4(smoothstep(0., 0.05, mod(p.x, 0.1) - .04));
+}
+
+
+vec4 reflectionmap(vec3 dir) {
+    vec2 p = vec2(dir.x, dir.y);
+    return vec4(smoothstep(0., 0.05, mod(p.x, 0.1) - .04));
+
+
+
+    vec3 aDir = abs(dir);
+
+    bool isXPositive = dir.x > 0.;
+    bool isYPositive = dir.y > 0.;
+    bool isZPositive = dir.z > 0.;
+
+    vec2 coords = vec2(0.);
+    
+    // +X
+    if (isXPositive && aDir.x >= aDir.y && aDir.x >= aDir.z) {
+        coords = vec2(-dir.z, dir.y);
+        return side(coords);
+    }
+    
+    // -X
+    if (!isXPositive && aDir.x >= aDir.y && aDir.x >= aDir.z) {
+        coords = vec2(dir.z, dir.y);
+        return side(coords);        
+    }
+
+    // +Y
+    if (isYPositive && aDir.y >= aDir.x && aDir.y >= aDir.z) {
+        coords = vec2(dir.x, -dir.z);
+        return top(coords);
+    }
+    
+    // -Y
+    if (!isYPositive && aDir.y >= aDir.x && aDir.y >= aDir.z) {
+        coords = vec2(dir.x, dir.z);
+        return bottom(coords);        
+    }
+
+    // +Z
+    if (isZPositive && aDir.z >= aDir.x && aDir.z >= aDir.y) {
+        coords = vec2(dir.x, dir.y);
+        return side(coords);        
+    }
+    
+    // -Z
+    if (!isZPositive && aDir.z >= aDir.x && aDir.z >= aDir.y) {
+        coords = vec2(-dir.x, dir.y);
+        return side(coords);        
+    }
+
+    return vec4(1., 0., 0., 0.);
+}
+
 
 float water(vec3 p) {
     float r = 1.;
 
+    float waterMask = max(-p.y - 1., length(p - vec3(0., -1., 0.)) - .65);
+
     float cylinder = length(max(abs(p) - vec3(0., 20., 0.), 0.)) - 1.01 - sin(p.y * 4.6 + time * 18.) * .005;
-    cylinder = max(-cylinder, cylinder - 0.01);
+    cylinder = max(-cylinder, cylinder - 0.015);
 
     float mask = 1.;
     
@@ -34,12 +102,21 @@ float water(vec3 p) {
     p.xz *= rotate(0.8);
     mask = min(mask, abs(p.x) - .28);    
 
+
     cylinder = max(cylinder, mask);
 
     r = min(r, max(cylinder, abs(p.y + 0.6) - .6));
-    r = min(r, max(abs(p.y) - 0.01, length(p) - 1.04));
-    p.y += 1.;
-    r = smin(r, max(abs(p.y) - 0.01, length(p) - 5.), 20.);    
+
+    float waves = sin(length(p) * 2. - time * (7. - length(p) * .03));
+
+    p.y += waves * 0.01;
+
+    r = smin(r, max(p.y, length(p * vec3(1., 4., 1.)) - .99), 30.);
+    
+    p.y += 1. + waves * 0.05;
+    r = smin(r, max(abs(p.y) - 0.05, length(p) - 5.), 20.);    
+
+    r = max(r, -waterMask);
 
     return r;
 }
@@ -47,7 +124,8 @@ float water(vec3 p) {
 float fountain(vec3 p) {
     p.y *= 2.;
 
-    float r = max(p.y, length(p) - 1. - sin(p.y * 20. + time * 5.) * .005);
+    float r = max(p.y, max(length(p) - 1., -(length(p) - .99)) - sin(p.y * 20. + time * 5.) * .005);
+
     p.y += 0.05;
     r = min(r, max(-p.y - 1.05, length(p - vec3(0., -1., 0.)) - .2));
 
@@ -60,9 +138,17 @@ float fountain(vec3 p) {
     return r * .4;
 }
 
-
 float map(vec3 p) {
     return min(water(p), fountain(p));
+}
+
+vec3 getNormal( vec3 p ) {
+    vec2 k = vec2(1, -1);
+    vec2 kek = k * 0.0001;
+    return normalize( k.xyy*map( p + kek.xyy ) + 
+                      k.yyx*map( p + kek.yyx ) + 
+                      k.yxy*map( p + kek.yxy ) + 
+                      k.xxx*map( p + kek.xxx ) );
 }
 
 vec4 pixel(vec2 p) {
@@ -89,6 +175,8 @@ vec4 pixel(vec2 p) {
         if (tmp < 0.001) {
             vec3 light = normalize(p - vec3(4., -0.5, 5.));
 
+            vec3 normal = getNormal(p);
+
             float shade = map(p - light);
 
             if (water(p) == tmp) {
@@ -96,6 +184,9 @@ vec4 pixel(vec2 p) {
                 // q.y += 0.002;
                 // return texture(channel0, q);
                 // return 0.03 + texture(channel0, q) * vec4(1., 1.4, 1.2, 1.);                
+
+                normal = reflect(ray, normal);
+                return reflectionmap(normal) * shade * 4. * vec4(.6, 2.9, 1.6, 0.) + 0.2;
                 return vec4(0., 0.14, 1.5, 0.) + shade * 1.75;
             }
 
