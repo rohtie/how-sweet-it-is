@@ -174,12 +174,41 @@ vec4 pixel(vec2 p) {
         p.x -= 0.5 * rep;        
     }
 
-    if (time > 145.) {
-        p.y = abs(p.y + sin(p.x * 4. + time * 2.)) - .5;
-        float rep = 1.7 + sin(time * 200.) * .15;
+    if (time > 150.) {
+        float rep = 1.6;
         p.x = mod(p.x, rep);
-        p.x -= 0.5 * rep;        
+        p.x -= 0.5 * rep;     
+
+        p *= rotate(-p.x * 1.5 + time * .1);
     }
+
+    if (time > 165.) {
+        p.y += tan(time * 5. + p.x);
+
+        p.y = abs(p.y + sin(p.x * 4. + time * 2.)) - .5;
+        p.x += tan(p.y * 2.);        
+
+        float rep = 1.6;
+        p.x = mod(p.x, rep);
+        p.x -= 0.5 * rep;     
+
+        p *= rotate(-p.x * 1.5 + time * .1);
+    }
+
+    if (time > 170.) {
+        p.y *= abs(p.x) * 200. + 0.005;
+        p.x += sin(p.y * 20.);
+        p.y += tan(time * 5. + p.x);
+
+        p.y = abs(p.y + sin(p.x * 4. + time * 2.)) - .5;
+        p.x += tan(p.y * 2.);        
+
+        float rep = 0.2;
+        p.x = mod(p.x, rep);
+        p.x -= 0.5 * rep;     
+
+        p *= rotate(-p.x * 1.5 + time * 20.5);
+    }    
 
 
 
