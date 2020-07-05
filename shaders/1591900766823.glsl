@@ -158,11 +158,36 @@ vec4 pixel(vec2 p) {
     p = 2.0 * p - 1.0;
     p.x *= resolution.x / resolution.y;
 
+
+    float camTime = floor(mod(time * 1.15 * .5, 4.));
+
+
+    if (time > 127.) {
+
+        p.y += sin(p.x * 3.) * .02;
+        p.x = abs(p.x) + tan(p.y * 2. + time * 5.) * .05;
+    }
+
+    if (time > 135.) {
+        float rep = 1.3;
+        p.x = mod(p.x, rep);
+        p.x -= 0.5 * rep;        
+    }
+
+    if (time > 145.) {
+        p.y = abs(p.y + sin(p.x * 4. + time * 2.)) - .5;
+        float rep = 1.7 + sin(time * 200.) * .15;
+        p.x = mod(p.x, rep);
+        p.x -= 0.5 * rep;        
+    }
+
+
+
+
     vec3 cam = vec3(0., -5., 27.);
     vec3 ray = vec3(p, -1.);
 
 
-    float camTime = floor(mod(time * 1.15 * .5, 4.));
 
 
     if (camTime > 3.) {
