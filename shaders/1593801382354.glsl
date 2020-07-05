@@ -152,11 +152,11 @@ float stars(vec3 p) {
     float r = length(vec2(length(p.xz) - 0.5 - sin(atan(p.x, p.z) * 4.) * 0.05, p.y)) - 0.007;    
 
     p.xz = circleRepeat(p.xz, 4.);    
-    p.x -= 0.5;
+    p.x -= 0.535;
 
     p.xz *= rotate(0.0);
     p.xy *= rotate(0.4);
-    p.zy *= rotate(-0.4);
+    p.zy *= rotate(0.4);
 
     return min(r, max(abs(p.z) - .01, length(p) - .125 - sin(atan(p.x, p.y) * 5.) * .018));    
 }
@@ -178,7 +178,9 @@ float fountain(vec3 p) {
     p.y -= 1.2;
 
     p.xz *= rotate(-time * .1);
+
     r = min(r, max(p.y, max(-max(abs(p.y + 0.65) - 0.45, min(abs(p.x) - .05, abs(p.z) - .05)), length(p) - .5)));
+    r = min(r, max(abs(p.y - 0.11) - 0.1, max(-max(abs(p.y - 0.45) - 0.45, min(abs(p.x) - .3, abs(p.z) - .3)), length(p) - .55 - p.y * .7)));
 
     return r * .4;
 }
@@ -222,22 +224,15 @@ vec4 pixel(vec2 p) {
 
 
             float shade = map(p - light);
+            vec3 normal = getNormal(p);
+            vec3 reflectedNormal = reflect(ray, normal);
 
             if (stars(p) == tmp) {
-                return vec4(4.9 + p.y * 2., 4.0, 0.2, 0.) * shade * .7;
+                return vec4(4.9 + p.y * 2., 4.0, 0.2, 0.) * shade * .7 + reflectedNormal.x;
             }
 
             if (water(p) == tmp) {
-                // q.x += 0.002;
-                // q.y += 0.002;
-                // return texture(channel0, q);
-                // return 0.03 + texture(channel0, q) * vec4(1., 1.4, 1.2, 1.);                
-
-                vec3 normal = getNormal(p);
-                normal = reflect(ray, normal);
-
-                return reflectionmap(normal) * shade * 4. * vec4(.6 - length(p.xz) * .5, 2.9, 1.6 - length(p.xz) * .2, 0.) + 0.2;
-                // return vec4(0., 0.14, 1.5, 0.) + shade * 1.75;
+                return reflectionmap(reflectedNormal) * shade * 4. * vec4(.6 - length(p.xz) * .5, 2.9, 1.6 - length(p.xz) * .2, 0.) + 0.2;
             }
 
             if (fountain(p) == tmp) {
@@ -250,7 +245,6 @@ vec4 pixel(vec2 p) {
 
         dist += tmp;
     }
-
 
     return vec4(0.);
 }
