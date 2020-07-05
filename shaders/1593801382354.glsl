@@ -166,6 +166,7 @@ float stars(vec3 p) {
     p.y -= 0.3;
 
     float r = length(vec2(length(p.xz) - 0.4 - sin(atan(p.x, p.z) * 4.) * 0.05, p.y)) - 0.007;    
+    return r;
 
     p.xz = circleRepeat(p.xz, 4.);    
     p.x -= 0.435;
@@ -174,7 +175,8 @@ float stars(vec3 p) {
     p.xy *= rotate(0.4);
     p.zy *= rotate(0.4);
 
-    return min(r, max(abs(p.z) - .01, length(p) - .105 - sin(atan(p.x, p.y) * 5.) * .018));    
+
+    return min(r, max(abs(p.z) - .01, length(p) - .105 - sin(atan(p.x, p.y) * 0.) * .018));    
 }
 
 float fountain(vec3 p) {
@@ -251,11 +253,11 @@ vec4 pixel(vec2 p) {
     cam.zy *= rotate(.4 + (time - 75.) * 0.0025);
     ray.zy *= rotate(.4 + (time - 75.) * 0.0025);
 
-    cam.zx *= rotate(time * .0 - 1.34);
-    ray.zx *= rotate(time * .0 - 1.34);
+    cam.zx *= rotate((time - 75.) * 0.1 - 1.34);
+    ray.zx *= rotate((time - 75.) * 0.1 - 1.34);
 
-    // cam.xy *= rotate(0.4);    
-    // ray.xy *= rotate(0.4);    
+    cam.xy *= rotate(0.4);    
+    ray.xy *= rotate(0.4);    
 
 
 
