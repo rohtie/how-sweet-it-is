@@ -109,7 +109,7 @@ float water(vec3 p) {
 
     float waterMask = max(-p.y - 1., length(p - vec3(0., -1., 0.)) - .65);
 
-    r = min(r, max(-p.y + 0.25, length(p * vec3(1., 2., 1.) - vec3(0., 0.2, 0.)) - .53 - sin(p.y * 20. + time * 2.) * .06));
+    r = min(r, max(-p.y + 0.25, length(p * vec3(1., 1.4, 1.) - vec3(0., 0.2, 0.)) - .37 - sin(p.y * 20. + time * 2.) * .06));
 
     float cylinder = length(max(abs(p) - vec3(0., 20., 0.), 0.)) - 1.01 - sin(p.y * 4.6 + time * 18.) * .005;
     cylinder = max(-cylinder, cylinder - 0.015);
@@ -149,16 +149,16 @@ float stars(vec3 p) {
 
     p.y -= 0.3;
 
-    float r = length(vec2(length(p.xz) - 0.5 - sin(atan(p.x, p.z) * 4.) * 0.05, p.y)) - 0.007;    
+    float r = length(vec2(length(p.xz) - 0.4 - sin(atan(p.x, p.z) * 4.) * 0.05, p.y)) - 0.007;    
 
     p.xz = circleRepeat(p.xz, 4.);    
-    p.x -= 0.535;
+    p.x -= 0.435;
 
     p.xz *= rotate(0.0);
     p.xy *= rotate(0.4);
     p.zy *= rotate(0.4);
 
-    return min(r, max(abs(p.z) - .01, length(p) - .125 - sin(atan(p.x, p.y) * 5.) * .018));    
+    return min(r, max(abs(p.z) - .01, length(p) - .105 - sin(atan(p.x, p.y) * 5.) * .018));    
 }
 
 float fountain(vec3 p) {
@@ -179,8 +179,8 @@ float fountain(vec3 p) {
 
     p.xz *= rotate(-time * .1);
 
-    r = min(r, max(p.y, max(-max(abs(p.y + 0.65) - 0.45, min(abs(p.x) - .05, abs(p.z) - .05)), length(p) - .5)));
-    r = min(r, max(abs(p.y - 0.11) - 0.1, max(-max(abs(p.y - 0.45) - 0.45, min(abs(p.x) - .3, abs(p.z) - .3)), length(p) - .55 - p.y * .7)));
+    r = min(r, max(p.y, max(-max(abs(p.y + 0.65) - 0.45, min(abs(p.x) - .05, abs(p.z) - .05)), length(p) - .4)));
+    r = min(r, max(abs(p.y - 0.08) - 0.07, max(-max(abs(p.y - 0.45) - 0.45, min(abs(p.x) - .25, abs(p.z) - .25)), length(p) - .45 - p.y * .7)));
 
     return r * .4;
 }
@@ -207,8 +207,8 @@ vec4 pixel(vec2 p) {
     vec3 cam = vec3(0., 0.5, 4.);
     vec3 ray = vec3(p, -1.);
 
-    cam.zx *= rotate(time * .04 + 1.05);
-    ray.zx *= rotate(time * .04 + 1.05);
+    // cam.zx *= rotate(time * .04 + 1.05);
+    // ray.zx *= rotate(time * .04 + 1.05);
     // cam.xy *= rotate(0.4);    
     // ray.xy *= rotate(0.4);    
 
