@@ -19,10 +19,10 @@ float smax(float a, float b, float k) {
     return log2(ka + kb) / k;
 }
 
-float hashie(vec2 p) {
-    return sin(p.x * 05. + sin(p.y * 200.) * 100. + p.x * p.y * 1000.);
+float hash(vec2 p) {
+    return fract(sin(1000. * p.x * p.y + 0.5) + p.x + 0.5 + sin(p.y * 15. + 0.5) * p.x * 690.);
 }
-       
+
 vec2 circleRepeat(vec2 p, float reps) {
     float angle = 2. * acos(-1.) / reps;
     
@@ -107,14 +107,15 @@ vec4 reflectionmap(vec3 dir) {
 float water(vec3 p) {
     float r = 1.;
 
-    float waterMask = max(-p.y - 1., length(p - vec3(0., -1., 0.)) - .65);
+    float waterMask = max(p.y + 1.07, length(p - vec3(0., -1.07, 0.)) - .99);
 
     float bigFountainEdge = length(vec2(length(p.xz) - 3.91, p.y + 0.95)) - 0.01;
 
     r = min(r, max(-p.y + 0.25, length(p * vec3(1., 1.4, 1.) - vec3(0., 0.2, 0.)) - .37 - sin(p.y * 20. + time * 2.) * .06));
 
-    float cylinder = length(max(abs(p) - vec3(0., 20., 0.), 0.)) - 1.01 - sin(p.y * 4.6 + time * 18.) * .005;
-    cylinder = max(-cylinder, cylinder - 0.015);
+    float rawCylinder = length(max(abs(p) - vec3(0., 20., 0.), 0.));
+    float cylinder = max(-(rawCylinder - 1.01), rawCylinder - 1.01 - 0.015 - sin(p.y * 4.6 + time * 18.) * .008);
+    float outerCylinder = max(-(rawCylinder - 3.98), rawCylinder - 3.98 - 0.01 - sin(p.y * 4.6 + time * 18.) * .008);
 
     float mask = 1.;
     
@@ -125,24 +126,36 @@ float water(vec3 p) {
     mask = min(mask, abs(p.x) - .08);
 
     p.xz *= rotate(0.8);
-    mask = min(mask, abs(p.x) - .28);    
+    mask = min(mask, abs(p.x) - .28);
 
 
     cylinder = max(cylinder, mask);
 
+    p.xz *= rotate(0.7);
+    mask = min(mask, abs(p.x) - .38);
+
+    p.xz *= rotate(0.23);
+    mask = min(mask, abs(p.x) - .03);    
+
+    outerCylinder = max(p.y + .95, max(outerCylinder, mask));
+
+
     r = min(r, max(cylinder, abs(p.y + 0.6) - .6));
 
-    float waves = sin(length(p) * 2. - time * (7. - length(p) * .03));
+    float waves = exp(-length(p)) * cos(2.5 * length(p) * acos(-1.) - time * 4.) * 8.;
 
     p.y += waves * 0.01;
 
     r = smin(r, max(p.y, length(p * vec3(1., 4., 1.)) - .99), 30.);
-    
-    p.y += 1. + waves * 0.05;
-    r = smin(r, max(abs(p.y) - 0.01, length(p) - 3.9), 20.);    
 
-    r = smax(r, -waterMask, 20.);
+    waves -= smoothstep(1.2, 0.0, length(p.xz)) * -20.;    
+    p.y += 1. + waves * 0.05;
+    r = smin(r, max(abs(p.y - 0.07) - 0.00, length(p) - 3.9), 20.);    
+
+    r = smin(r, waterMask, 10.);
     r = smin(r, bigFountainEdge, 25.);
+
+    r = smin(r, outerCylinder, 30.);
 
     return r;
 }
@@ -198,12 +211,12 @@ float fountain(vec3 p) {
 
     p.y += 2.35;
     float rawCylinder = length(max(abs(p) - vec3(0., 30., 0.), 0.));
-    float cylinder = max(abs(p.y + 0.15) - .13, max(-(rawCylinder - 3.95), rawCylinder - 3.95));
+    float cylinder = max(abs(p.y + 0.15) - .13, max(-(rawCylinder - 3.75), rawCylinder - 3.95));
+
     cylinder = min(cylinder, max(abs(p.y + 0.9) - .6, rawCylinder - 3.8));
     cylinder = min(cylinder, max(abs(p.y + 1.1) - .2, rawCylinder - 3.95));
 
     cylinder = max(cylinder, -fountainHoles);
-
 
     r = min(r, cylinder);
 
@@ -232,13 +245,19 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
-    vec3 cam = vec3(0., 0., 7.);
+    vec3 cam = vec3(0., -0.2, 8.5);
     vec3 ray = vec3(p, -1.);
 
-    // cam.zx *= rotate(time * .04 + 1.05);
-    // ray.zx *= rotate(time * .04 + 1.05);
+    cam.zy *= rotate(.45);
+    ray.zy *= rotate(.45);
+
+    cam.zx *= rotate(time * .04 + 1.05);
+    ray.zx *= rotate(time * .04 + 1.05);
+
     // cam.xy *= rotate(0.4);    
     // ray.xy *= rotate(0.4);    
+
+
 
     float dist = 0.;
 
@@ -249,7 +268,6 @@ vec4 pixel(vec2 p) {
 
         if (tmp < 0.001) {
             vec3 light = normalize(p - vec3(4., -0.5, 5.));
-
 
             float shade = map(p - light);
             vec3 normal = getNormal(p);
@@ -271,8 +289,12 @@ vec4 pixel(vec2 p) {
             return vec4(shade);
         }
 
+        if (dist > 50.) {
+            break;
+        }
+
         dist += tmp;
     }
 
-    return vec4(0.);
+    return vec4(1. - smoothstep(0., 0.0002, hash(p + time * .00000005)));
 }
