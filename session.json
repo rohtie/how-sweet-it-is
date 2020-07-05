@@ -201,7 +201,8 @@
                     "type": 2
                 },
                 {
-                    "type": 0
+                    "shader": 7,
+                    "type": 2
                 },
                 {
                     "type": 0
