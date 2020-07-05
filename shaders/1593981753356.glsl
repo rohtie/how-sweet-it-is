@@ -5,6 +5,11 @@ vec4 pixel(vec2 p) {
     p.x *= resolution.x / resolution.y;
 
 
+    if (time > 110.) {
+        return mix(texture(channel1, q), texture(channel2, q), .99);
+    }
+
+
     float fadein = (time - 73.571) * .01;
 
     if (length(texture(channel1, q)) < 0.37) {
