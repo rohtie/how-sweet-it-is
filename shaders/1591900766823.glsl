@@ -16,8 +16,8 @@ float map(vec3 p) {
     // p.xz *= rotate(-0.35);
     // p.xz *= rotate(0.35);
     // p.xz *= rotate(0.2);
-    p.zy *= rotate(0.35);
-    p.xz *= rotate(time * .06);
+    // p.zy *= rotate(0.35);
+    // p.xz *= rotate(time * .06);
 
 
     p.y += sin(p.x * 0.1 + time * 10. + cos(p.x * 0.5 + time) * .75) * .4;
@@ -161,9 +161,56 @@ vec4 pixel(vec2 p) {
     vec3 cam = vec3(0., -5., 27.);
     vec3 ray = vec3(p, -1.);
 
+
+    float camTime = floor(mod(time * 1.15 * .5, 4.));
+
+
+    if (camTime > 3.) {
+        cam = vec3(0., -2.1, 15.);
+        cam.xy *= rotate(-0.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.5);
+        ray.zy *= rotate(-0.5);
+    }
+    else if (camTime > 2.) {
+        cam = vec3(0., 3., 15.);
+        cam.xy *= rotate(-0.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.15);
+        ray.zy *= rotate(-0.15);    
+    }
+    else if (camTime > 1.) {
+        cam = vec3(0., 5.5, 14.);
+        cam.xy *= rotate(-0.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.6);
+        ray.zy *= rotate(-0.6);        
+        cam.xz *= rotate(-0.4);
+        ray.xz *= rotate(-0.4);
+    }
+    else if (camTime > 0.) {
+        cam = vec3(0., -2.1, 15.);
+        cam.xz *= rotate(0.0);
+        ray.xz *= rotate(0.0);                
+        cam.xy *= rotate(-0.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.6);
+        ray.zy *= rotate(-0.6);
+    }
+    else {
+        cam = vec3(0., -2.1, 15.);
+        cam.xy *= rotate(-0.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.5);
+        ray.zy *= rotate(-0.5);        
+    }
+
+
     float drum = tan(0.85 + time * 3.6);
     drum = smoothstep(0.0, 1.0, drum);
     drum *= .15;
+
+    // drum = 0.15;
 
     vec4 bg = vec4(1. - p.y * .15, .4, 1. + length(p) * .08, 0.) * drum;        
 
