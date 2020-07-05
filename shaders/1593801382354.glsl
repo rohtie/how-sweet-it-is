@@ -109,6 +109,8 @@ float water(vec3 p) {
 
     float waterMask = max(-p.y - 1., length(p - vec3(0., -1., 0.)) - .65);
 
+    float bigFountainEdge = length(vec2(length(p.xz) - 3.91, p.y + 0.95)) - 0.01;
+
     r = min(r, max(-p.y + 0.25, length(p * vec3(1., 1.4, 1.) - vec3(0., 0.2, 0.)) - .37 - sin(p.y * 20. + time * 2.) * .06));
 
     float cylinder = length(max(abs(p) - vec3(0., 20., 0.), 0.)) - 1.01 - sin(p.y * 4.6 + time * 18.) * .005;
@@ -137,9 +139,10 @@ float water(vec3 p) {
     r = smin(r, max(p.y, length(p * vec3(1., 4., 1.)) - .99), 30.);
     
     p.y += 1. + waves * 0.05;
-    r = smin(r, max(abs(p.y) - 0.05, length(p) - 5.), 20.);    
+    r = smin(r, max(abs(p.y) - 0.01, length(p) - 3.9), 20.);    
 
     r = smax(r, -waterMask, 20.);
+    r = smin(r, bigFountainEdge, 25.);
 
     return r;
 }
@@ -162,6 +165,17 @@ float stars(vec3 p) {
 }
 
 float fountain(vec3 p) {
+    float fountainHoles = 1.;
+    {
+        vec3 p = p;
+        p.y += 0.25;
+        p.y *= .7;
+        p.xz = circleRepeat(p.xz, 35.);
+        p.xz *= rotate(1. / 35.);
+        p.xz += 0.5;
+        fountainHoles = min(fountainHoles, length(max(abs(p - vec3(0., -0.75, 0.)) - vec3(0., 0., 20.), 0.)) - .15);
+    }
+
     p.y *= 2.;
 
     float r = max(p.y, max(length(p) - 1., -(length(p) - .99)) - sin(p.y * 20. + time * 5.) * .005);
@@ -182,6 +196,20 @@ float fountain(vec3 p) {
     r = min(r, max(p.y, max(-max(abs(p.y + 0.65) - 0.45, min(abs(p.x) - .05, abs(p.z) - .05)), length(p) - .4)));
     r = min(r, max(abs(p.y - 0.08) - 0.07, max(-max(abs(p.y - 0.45) - 0.45, min(abs(p.x) - .25, abs(p.z) - .25)), length(p) - .45 - p.y * .7)));
 
+    p.y += 2.35;
+    float rawCylinder = length(max(abs(p) - vec3(0., 30., 0.), 0.));
+    float cylinder = max(abs(p.y + 0.15) - .13, max(-(rawCylinder - 3.95), rawCylinder - 3.95));
+    cylinder = min(cylinder, max(abs(p.y + 0.9) - .6, rawCylinder - 3.8));
+    cylinder = min(cylinder, max(abs(p.y + 1.1) - .2, rawCylinder - 3.95));
+
+    cylinder = max(cylinder, -fountainHoles);
+
+
+    r = min(r, cylinder);
+
+    p.y += .89;
+    r = min(r, max(p.y, max(length(p) - 3.95, -(length(p) - 3.95))));
+
     return r * .4;
 }
 
@@ -192,10 +220,10 @@ float map(vec3 p) {
 vec3 getNormal( vec3 p ) {
     vec2 k = vec2(1, -1);
     vec2 kek = k * 0.0001;
-    return normalize( k.xyy*map( p + kek.xyy ) + 
-                      k.yyx*map( p + kek.yyx ) + 
-                      k.yxy*map( p + kek.yxy ) + 
-                      k.xxx*map( p + kek.xxx ) );
+    return normalize(k.xyy*map(p + kek.xyy) + 
+                     k.yyx*map(p + kek.yyx) + 
+                     k.yxy*map(p + kek.yxy) + 
+                     k.xxx*map(p + kek.xxx));
 }
 
 vec4 pixel(vec2 p) {
@@ -204,7 +232,7 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
-    vec3 cam = vec3(0., 0.5, 4.);
+    vec3 cam = vec3(0., 0., 7.);
     vec3 ray = vec3(p, -1.);
 
     // cam.zx *= rotate(time * .04 + 1.05);
