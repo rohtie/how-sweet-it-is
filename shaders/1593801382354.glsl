@@ -157,7 +157,7 @@ float water(vec3 p) {
 
     r = smin(r, outerCylinder, 30.);
 
-    return r;
+    return r * .99;
 }
 
 float stars(vec3 p) {
@@ -223,7 +223,7 @@ float fountain(vec3 p) {
     p.y += .89;
     r = min(r, max(p.y, max(length(p) - 3.95, -(length(p) - 3.95))));
 
-    return r * .4;
+    return r * .8;
 }
 
 float map(vec3 p) {
@@ -245,7 +245,7 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
-    vec3 cam = vec3(0., -0.2, 8.5);
+    vec3 cam = vec3(0., -0.66, 6.8);
     vec3 ray = vec3(p, -1.);
 
     cam.zy *= rotate(.45);
@@ -278,12 +278,12 @@ vec4 pixel(vec2 p) {
             }
 
             if (water(p) == tmp) {
-                return reflectionmap(reflectedNormal) * shade * 4. * vec4(.6 - length(p.xz) * .5, 2.9, 1.6 - length(p.xz) * .2, 0.) + 0.2;
+                return reflectionmap(reflectedNormal) * shade * 4. * vec4(.6 - length(p.xz) * .5, 1.15, 1.6 - length(p.xz) * .2, 0.) + 0.2;
             }
 
             if (fountain(p) == tmp) {
                 float ring = 1. - smoothstep(0., 0.001, abs(p.y + 0.52) - 0.04);
-                return vec4(shade * 2.) * vec4(p.y * .35 + 1.35 + ring * 1.25 + mod(p.y, 0.075) * 5., 0.9 + ring * 1.2 - mod(p.y + 0.31 + sin(p.x * 14. + time * 6.5) * .005, 0.075) * 5., 2.2 - ring, 0.);
+                return vec4(shade * 1.2) * vec4(p.y * .35 + 1.35 + ring * 1.25 + mod(p.y, 0.075) * 5., 0.9 + ring * 1.2 - mod(p.y + 0.31 + sin(p.x * 14. + time * 6.5) * .005, 0.075) * 5., 2.2 - ring, 0.);
             }
 
             return vec4(shade);
@@ -296,5 +296,9 @@ vec4 pixel(vec2 p) {
         dist += tmp;
     }
 
-    return vec4(1. - smoothstep(0., 0.0002, hash(p + time * .00000005)));
+    p.y += sin(p.x * 5. + time * 2.) * .05;
+    p.x += sin(p.y * 2.);
+    float r = length(p) - .4;
+
+    return vec4(1. - smoothstep(0., 0.0002, hash(q + time * .00000005))) + vec4(r * 1.4 - p.y * .2, r + p.y * .5, r + abs(p.x) * 0.75, 0.);
 }
