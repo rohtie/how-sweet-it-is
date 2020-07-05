@@ -245,14 +245,14 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
-    vec3 cam = vec3(0., -0.66, 6.8);
+    vec3 cam = vec3(0., -0.66 - max(0., (time - 95.)) * .5, 1.5 + (time - 75.) * .3);
     vec3 ray = vec3(p, -1.);
 
-    cam.zy *= rotate(.45);
-    ray.zy *= rotate(.45);
+    cam.zy *= rotate(.4 + (time - 75.) * 0.0025);
+    ray.zy *= rotate(.4 + (time - 75.) * 0.0025);
 
-    cam.zx *= rotate(time * .04 + 1.05);
-    ray.zx *= rotate(time * .04 + 1.05);
+    cam.zx *= rotate(time * .0 - 1.34);
+    ray.zx *= rotate(time * .0 - 1.34);
 
     // cam.xy *= rotate(0.4);    
     // ray.xy *= rotate(0.4);    
@@ -278,7 +278,7 @@ vec4 pixel(vec2 p) {
             }
 
             if (water(p) == tmp) {
-                return reflectionmap(reflectedNormal) * shade * 4. * vec4(.6 - length(p.xz) * .5, 1.15, 1.6 - length(p.xz) * .2, 0.) + 0.2;
+                return reflectionmap(reflectedNormal) * shade * 4. * vec4(.6 - length(p.xz) * 5.95, 4.15, 1.6 - length(p.xz) * .1, 0.) + 0.2;
             }
 
             if (fountain(p) == tmp) {
