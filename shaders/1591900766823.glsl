@@ -159,49 +159,62 @@ vec4 pixel(vec2 p) {
     p.x *= resolution.x / resolution.y;
 
 
-    float camTime = floor(mod(time * 1.15 * .5, 4.));
+    float camTime = floor(mod((time - 39.) * 1.15 * 0.25, 11.));
+
 
 
     if (time > 127.) {
+        camTime = floor(mod((time - 127.) * 1.15 * .5, 11.));
+        
+        // if (camTime == 0.) {
+        //     if (length(p + 0.75) < 0.15) {
+        //         return vec4(1.);
+        //     }            
+        // }
 
         p.y += sin(p.x * 3.) * .02;
         p.x = abs(p.x) + tan(p.y * 2. + time * 5.) * .05;
     }
 
-    if (time > 135.) {
+    if (time > 145.) {
         float rep = 1.3;
         p.x = mod(p.x, rep);
         p.x -= 0.5 * rep;        
     }
 
-    if (time > 150.) {
-        float rep = 1.6;
-        p.x = mod(p.x, rep);
-        p.x -= 0.5 * rep;     
-
-        p *= rotate(-p.x * 1.5 + time * .1);
-    }
-
     if (time > 165.) {
-        p.y += tan(time * 5. + p.x);
+        p.y = abs(p.y) + 0.25;
 
-        p.y = abs(p.y + sin(p.x * 4. + time * 2.)) - .5;
-        p.x += tan(p.y * 2.);        
-
-        float rep = 1.6;
+        float rep = 1.7;
         p.x = mod(p.x, rep);
         p.x -= 0.5 * rep;     
 
-        p *= rotate(-p.x * 1.5 + time * .1);
+        p *= rotate(0.25 + time * 0.2);
+
+        // p *= rotate(-p.x * 1.5 + time * .1);
     }
 
-    if (time > 170.) {
-        p.y *= abs(p.x) * 200. + 0.005;
-        p.x += sin(p.y * 20.);
-        p.y += tan(time * 5. + p.x);
+    // if (time > 165.) {
+    //     p.y += tan(time * 5. + p.x);
+
+    //     p.y = abs(p.y + sin(p.x * 4. + time * 2.)) - .5;
+    //     p.x += tan(p.y * 2.);        
+
+    //     float rep = 1.6;
+    //     p.x = mod(p.x, rep);
+    //     p.x -= 0.5 * rep;     
+
+    //     p *= rotate(-p.x * 1.5 + time * .1);
+    // }
+
+    if (time > 174.) {
+        p.x += tan(time * 200.);
+        // p.y *= abs(p.x) * 200. + 0.005;
+        // p.x += sin(p.y * 20.);
+        // p.y += tan(time * 5. + p.x);
 
         p.y = abs(p.y + sin(p.x * 4. + time * 2.)) - .5;
-        p.x += tan(p.y * 2.);        
+        p.x += tan(p.y * 2. + time * 20.);        
 
         float rep = 0.2;
         p.x = mod(p.x, rep);
@@ -216,40 +229,85 @@ vec4 pixel(vec2 p) {
     vec3 cam = vec3(0., -5., 27.);
     vec3 ray = vec3(p, -1.);
 
-
-
-
-    if (camTime > 3.) {
+    if (camTime > 9.) {
         cam = vec3(0., -2.1, 15.);
+        cam.xz *= rotate(.88);
+        ray.xz *= rotate(.88);                
+        cam.xy *= rotate(-0.3);
+        ray.xy *= rotate(-0.3);
+        cam.zy *= rotate(-0.6);
+        ray.zy *= rotate(-0.6);    
+    }
+    else if (camTime > 8.) {
+        cam = vec3(-1.2, -5., 15.);
+        cam.xz *= rotate(-1.);
+        ray.xz *= rotate(-1.);                
         cam.xy *= rotate(-0.5);
         ray.xy *= rotate(-0.5);
-        cam.zy *= rotate(-0.5);
-        ray.zy *= rotate(-0.5);
+        cam.zy *= rotate(-0.6);
+        ray.zy *= rotate(-0.6);    
     }
-    else if (camTime > 2.) {
-        cam = vec3(0., 3., 15.);
-        cam.xy *= rotate(-0.5);
-        ray.xy *= rotate(-0.5);
-        cam.zy *= rotate(-0.15);
-        ray.zy *= rotate(-0.15);    
-    }
-    else if (camTime > 1.) {
-        cam = vec3(0., 5.5, 14.);
+    else if (camTime > 7.) {
+        cam = vec3(-3., 5.5, 14.);
         cam.xy *= rotate(-0.5);
         ray.xy *= rotate(-0.5);
         cam.zy *= rotate(-0.6);
         ray.zy *= rotate(-0.6);        
         cam.xz *= rotate(-0.4);
-        ray.xz *= rotate(-0.4);
+        ray.xz *= rotate(-0.4);            
     }
-    else if (camTime > 0.) {
+    else if (camTime > 6.) {
+        cam = vec3(0., -.1, 14.);
+        cam.xy *= rotate(-1.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.42);
+        ray.zy *= rotate(-0.42);
+        cam.zx *= rotate(0.5);
+        ray.zx *= rotate(0.5);        
+    }
+    else if (camTime > 5.) {
+        cam = vec3(1.9, -.15, 14.);
+        
+        cam.xy *= rotate(-1.5);
+        ray.xy *= rotate(-0.5);
+
+        cam.zy *= rotate(-0.42);
+        ray.zy *= rotate(-0.42);
+        cam.xz *= rotate(-1.25);
+        ray.xz *= rotate(-1.25);        
+    }
+    else if (camTime > 4.) {
         cam = vec3(0., -2.1, 15.);
-        cam.xz *= rotate(0.0);
-        ray.xz *= rotate(0.0);                
         cam.xy *= rotate(-0.5);
         ray.xy *= rotate(-0.5);
-        cam.zy *= rotate(-0.6);
-        ray.zy *= rotate(-0.6);
+        cam.zy *= rotate(-0.5);
+        ray.zy *= rotate(-0.5);        
+    }
+    else if (camTime > 3.) {
+        cam = vec3(0., 2., 15.);
+        cam.xy *= rotate(-0.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.15);
+        ray.zy *= rotate(-0.15);
+    }
+    else if (camTime > 2.) {
+        cam = vec3(0., 0., 26.);
+    }
+    else if (camTime > 1.) {
+        cam = vec3(-7., -2.1, 15.);
+        cam.xy *= rotate(-0.25);
+        ray.xy *= rotate(-0.25);
+        cam.zy *= rotate(-0.2);
+        ray.zy *= rotate(-0.2);        
+    }
+    else if (camTime > 0.) {
+        cam = vec3(-4.5, -.9, 14.);
+        cam.xz *= rotate(0.35);
+        ray.xz *= rotate(0.35);                
+        cam.xy *= rotate(-0.5);
+        ray.xy *= rotate(-0.5);
+        cam.zy *= rotate(-0.4);
+        ray.zy *= rotate(-0.4);        
     }
     else {
         cam = vec3(0., -2.1, 15.);
@@ -264,7 +322,11 @@ vec4 pixel(vec2 p) {
     drum = smoothstep(0.0, 1.0, drum);
     drum *= .15;
 
-    // drum = 0.15;
+    if (time > 170.) {
+        drum = 0.15;
+    }
+
+    // drum = 0.15; 
 
     vec4 bg = vec4(1. - p.y * .15, .4, 1. + length(p) * .08, 0.) * drum;        
 
