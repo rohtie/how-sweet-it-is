@@ -250,8 +250,8 @@ vec4 pixel(vec2 p) {
 
     vec3 cam = vec3(0., -0.66, 1.5 + (time - 75.) * .3);
 
-    if (time > 117.) {
-        float overTime = 1. + (time - 117.) * 1.25;
+    if (time > 118.) {
+        float overTime = 1. + (time - 118.) * 1.65;
         p *= 1. / overTime;
         cam.z -= overTime;
     }
@@ -265,9 +265,12 @@ vec4 pixel(vec2 p) {
     ray.zx *= rotate((time - 75.) * 0.1 - 1.34);
 
     cam.xy *= rotate(0.4);    
-    ray.xy *= rotate(0.4);    
+    ray.xy *= rotate(0.4);
 
-
+    if (time > 123.) {
+        cam.zy *= rotate(0.2);
+        ray.zy *= rotate(0.2);
+    }    
 
     float dist = 0.;
 

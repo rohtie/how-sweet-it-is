@@ -5,7 +5,7 @@ vec4 pixel(vec2 p) {
     p.x *= resolution.x / resolution.y;
 
 
-    if (time > 110.) {
+    if (time > 105.) {
         return mix(texture(channel1, q), texture(channel2, q), .99);
     }
 
