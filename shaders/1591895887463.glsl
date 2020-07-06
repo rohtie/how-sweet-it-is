@@ -1,5 +1,6 @@
 vec4 pixel(vec2 p) {
     p /= resolution;
+    vec2 q = p;
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
@@ -9,5 +10,5 @@ vec4 pixel(vec2 p) {
 
     float r = length(p) - .5;
 
-    return vec4(r, r*.5 * p.x * .05, p.x * 0.7, 0.);
+    return texture(channel0, q) / vec4(r, r*.5 * p.x * .05, p.x * 0.7, 0.);
 }
