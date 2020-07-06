@@ -28,14 +28,14 @@
             "shader": 7
         },
         {
-            "length": 57122,
+            "length": 53622,
             "name": "ASS",
             "shader": 1
         },
         {
-            "length": 20045,
-            "name": "Dream founntain",
-            "shader": 6
+            "length": 23545,
+            "name": "cumending",
+            "shader": 0
         },
         {
             "length": 23669,
@@ -47,7 +47,8 @@
         {
             "channels": [
                 {
-                    "type": 0
+                    "shader": 1,
+                    "type": 2
                 },
                 {
                     "type": 0
