@@ -247,7 +247,15 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
+
     vec3 cam = vec3(0., -0.66, 1.5 + (time - 75.) * .3);
+
+    if (time > 117.) {
+        float overTime = 1. + (time - 117.) * 1.25;
+        p *= 1. / overTime;
+        cam.z -= overTime;
+    }
+
     vec3 ray = vec3(p, -1.);
 
     cam.zy *= rotate(.4 + (time - 75.) * 0.0025);
