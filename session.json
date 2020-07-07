@@ -89,7 +89,8 @@
         {
             "channels": [
                 {
-                    "type": 0
+                    "shader": 2,
+                    "type": 2
                 },
                 {
                     "type": 0
@@ -131,14 +132,15 @@
         {
             "channels": [
                 {
-                    "type": 0
+                    "shader": 4,
+                    "type": 2
                 },
                 {
                     "shader": 2,
                     "type": 2
                 },
                 {
-                    "shader": 4,
+                    "shader": 5,
                     "type": 2
                 },
                 {
