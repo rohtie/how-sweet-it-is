@@ -68,7 +68,8 @@
         {
             "channels": [
                 {
-                    "type": 0
+                    "shader": 1,
+                    "type": 2
                 },
                 {
                     "type": 0
