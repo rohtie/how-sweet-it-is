@@ -30,14 +30,14 @@ float r(vec2 p) {
     return r;
 }
 
-float o(vec2 p) {
-    float r = 1.;
+// float o(vec2 p) {
+//     float r = 1.;
 
-    p *= rotate(0.25);
-    r = min(r, box(p, vec2(0.125, 0.125)));
+//     p *= rotate(0.25);
+//     r = min(r, box(p, vec2(0.125, 0.125)));
 
-    return r;
-}
+//     return r;
+// }
 
 float h(vec2 p) {
     float r = 1.;
