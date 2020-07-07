@@ -140,12 +140,10 @@
                     "type": 2
                 },
                 {
-                    "shader": 5,
-                    "type": 2
+                    "type": 0
                 },
                 {
-                    "shader": 6,
-                    "type": 2
+                    "type": 0
                 },
                 {
                     "type": 0
@@ -200,15 +198,15 @@
         {
             "channels": [
                 {
+                    "shader": 7,
+                    "type": 2
+                },
+                {
                     "shader": 6,
                     "type": 2
                 },
                 {
-                    "shader": 4,
-                    "type": 2
-                },
-                {
-                    "shader": 7,
+                    "shader": 8,
                     "type": 2
                 },
                 {
@@ -219,6 +217,29 @@
                 }
             ],
             "id": "1593981753356"
+        },
+        {
+            "channels": [
+                {
+                    "shader": 6,
+                    "type": 2
+                },
+                {
+                    "shader": 2,
+                    "type": 2
+                },
+                {
+                    "shader": 6,
+                    "type": 2
+                },
+                {
+                    "type": 0
+                },
+                {
+                    "type": 0
+                }
+            ],
+            "id": "1594145258180"
         }
     ]
 }

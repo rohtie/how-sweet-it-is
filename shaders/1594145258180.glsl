@@ -20,7 +20,7 @@ vec4 pixel(vec2 p) {
     q.y *= 0.98;
     q.y += 0.01;
 
-    vec4 self = texture(globalFeedback, q);
+    vec4 self = texture(channel2, q);
     
     return (self + 0.01) * vec4(.98, .9 - tan(p.x * 0.7), 1.5, 0.);
 }
