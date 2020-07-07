@@ -26,5 +26,9 @@ vec4 pixel(vec2 p) {
         self = texture(channel2, q);
     }
 
+    if (time > 72.) {
+        self = texture(channel3, q);
+    }
+
     return (self + 0.01) * vec4(.98, .9 - tan(p.x * 0.7), 1.5, 0.);
 }

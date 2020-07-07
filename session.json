@@ -144,7 +144,8 @@
                     "type": 2
                 },
                 {
-                    "type": 0
+                    "shader": 6,
+                    "type": 2
                 },
                 {
                     "type": 0
