@@ -14,7 +14,7 @@ vec4 pixel(vec2 p) {
     // fadein = 1.;
 
 
-    if (length(texture(channel1, q)) < 0.37) {
+    if (length(texture(channel1, q)) < 0.1) {
         q *= .996 + sin(q.x) * .002;
         q += 0.002;
         return texture(channel0, q) * .99;

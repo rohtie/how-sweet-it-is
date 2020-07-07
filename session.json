@@ -36,11 +36,6 @@
             "length": 23545,
             "name": "cumending",
             "shader": 0
-        },
-        {
-            "length": 23669,
-            "name": "Ending",
-            "shader": 0
         }
     ],
     "shaders": [

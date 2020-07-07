@@ -54,6 +54,8 @@ vec4 pixel(vec2 p) {
     p -= .5;
     p.x *= resolution.x / resolution.y;
 
+    p.y -= 0.15;
+
     vec3 cam = vec3(0., 0., 2.);
     // vec3 cam = vec3(0., mod(time * 5., 6.), 2.);
     vec3 ray = vec3(p, -1.);
