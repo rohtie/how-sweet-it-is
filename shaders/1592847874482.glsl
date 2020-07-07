@@ -98,7 +98,6 @@ vec4 pixel(vec2 p) {
     q.x -= 0.0105;
     q.y *= 1.0015;
     q.y -= 0.0006;
-    return texture(channel0, q) * vec4(.995, 1.012, 1.02, 0.);
-    
-    return 0.12 + vec4(p.y * 0.2, p.y * 0.1 + abs(p.x) * .27, p.y + 0.08, 0.);
+    return texture(channel1, q) * vec4(.995, 1.012, 1.02, 0.);    
+    // return 0.12 + vec4(p.y * 0.2, p.y * 0.1 + abs(p.x) * .27, p.y + 0.08, 0.);
 }
