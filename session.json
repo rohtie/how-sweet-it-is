@@ -108,10 +108,11 @@
         {
             "channels": [
                 {
-                    "type": 0
+                    "shader": 3,
+                    "type": 2
                 },
                 {
-                    "shader": 1,
+                    "shader": 5,
                     "type": 2
                 },
                 {
@@ -151,7 +152,8 @@
         {
             "channels": [
                 {
-                    "type": 0
+                    "shader": 5,
+                    "type": 2
                 },
                 {
                     "shader": 4,
